@@ -7,6 +7,7 @@
 // 3. TODO: depthFirstTraversal();
 
 const LinkedList = require('./src/LinkedList.js');
+const Queue = require('./src/Queue.js');
 
 class Graph {
 
@@ -43,7 +44,7 @@ class Graph {
             let currListNode = this.list[i].head;
             let s = "Vertix " + i + ": ";
 
-            while (currListNode != null) {
+            while (currListNode !== null) {
                 s += currListNode.data + " => ";
                 currListNode = currListNode.nextNode;
             }
@@ -52,15 +53,44 @@ class Graph {
 
             console.log(s);
         }
-    }
+    }   
 
-    // TODO: Breadth-First Traversal
+
+    breadthFirstTraversal(source) {
+        console.log("Visited: " + source +"; ");
+
+        let q = new Queue;
+
+        for (let i = source; i < this.vertices; i++) {
+            
+            // we reverse the list of each vertex to traverse the graph from left to right
+            let reversedList = this.list[i].createReversed();
+            let t = reversedList.head;
+            
+
+            while (t !== null) {
+                q.enqueue(t.data);
+                t = t.nextNode;
+            }
+        }
+        
+        while (q.getFront()) {
+            console.log("Visited: " + q.dequeue() +"; ");
+        }
+    }
 
     // TODO: Depth-first traversal
 }
 
-let myGraph = new Graph(7);
+let myGraph = new Graph(6);
 
 myGraph.addEdge(0,1);
 myGraph.addEdge(0,2);
+myGraph.addEdge(2,3);
+myGraph.addEdge(2,4);
+myGraph.addEdge(2,5);
+myGraph.addEdge(5,0);
+
 myGraph.printSelf();
+console.log();
+myGraph.breadthFirstTraversal(0);
