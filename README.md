@@ -9,6 +9,9 @@ inserts a destination vertex into the list of source vertex
 1. printSelf();
 Prints every vertex and its edges.
 
+1. breadthFirstTraversal(source);
+Bredth First Trabersal
+
 
 ### Example of how to create a graph:
 
