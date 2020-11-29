@@ -10,7 +10,7 @@ inserts a destination vertex into the list of source vertex
 Prints every vertex and its edges.
 
 1. breadthFirstTraversal(source);
-Bredth First Trabersal
+Breadth first traversal
 
 
 ### Example of how to create a graph:
