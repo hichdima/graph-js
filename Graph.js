@@ -3,8 +3,8 @@
 // Graph methods list:
 // 1. addEdge(source, destination);
 // 2. printSelf(data);
-// 3. TODO: breadthFirstTraversal();
-// 3. TODO: depthFirstTraversal();
+// 3. breadthFirstTraversal(source);
+// 3. depthFirstTraversal(source);
 
 const LinkedList = require('./src/LinkedList.js');
 const Queue = require('./src/Queue.js');
@@ -80,9 +80,7 @@ class Graph {
                 }
                 t = t.nextNode;
             }
-                    
-            console.log(q);
-            
+
             // visit every vertex we have in the queue
             while (q.getFront()) {
                 let currentNode = q.dequeue();
@@ -119,9 +117,7 @@ class Graph {
                 if (!visited[t.data]) s.push(t.data);
                 t = t.nextNode;
             }
-            
-            console.log(s);
-            
+
             // visit every vertex we have in the stack
             while(s.getTop()) {
                 let currentNode = s.pop();
