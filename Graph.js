@@ -56,36 +56,47 @@ class Graph {
         }
     }   
 
+    // TODO: disconnected graph traversing
     breadthFirstTraversal(source) {
-        console.log("Visited: " + source +"; ");
-
         let q = new Queue;
-        
+        let g = this;
         let visited = [];
-        for (let i = source; i < this.vertices; i++) {
-            visited.push(false);
-        }
+        
+        for (let i = source; i < this.vertices; i++) visited.push(false);
 
-        for (let i = source; i < this.vertices; i++) {
-            // we reverse the list of each vertex to traverse the graph from left to right
-            let reversedList = this.list[i].createReversed();
-            let t = reversedList.head;
+        traverse(source);
+        
+        function traverse(source) {
+            console.log("Visited: " + source);
+            visited[source] = true; 
             
+            let list = g.list[source].createReversed();
+            let t = list.head;
+            
+            // enque edges of current vertex to the queue
             while (t !== null) {
-                // enque vertex if we didn't visit it yet
                 if (!visited[t.data]) {
                     q.enqueue(t.data);
-                    visited[t.data] = true;
                 }
                 t = t.nextNode;
             }
-        }
-        
-        while (q.getFront()) {
-            console.log("Visited: " + q.dequeue() +"; ");
+                    
+            console.log(q);
+            
+            // visit every vertex we have in the queue
+            while (q.getFront()) {
+                let currentNode = q.dequeue();
+                if (!visited[currentNode]) traverse(currentNode);
+            }
+            
+            // disconnected graph check
+            // visit vertex if we didn't yet 
+            for (let i = 0; i < visited.length; i++) {
+                if (!visited[i]) traverse(i);
+            }
         }
     }
-
+    
     depthFirstTraversal(source) {
         let s = new Stack;
         let g = this;
@@ -109,13 +120,15 @@ class Graph {
                 t = t.nextNode;
             }
             
+            console.log(s);
+            
             // visit every vertex we have in the stack
             while(s.getTop()) {
-                let currentNode = s.pop();                                
+                let currentNode = s.pop();
                 if (!visited[currentNode]) traverse(currentNode);
             }
             
-            // unconnected graph check
+            // disconnected graph check
             // visit vertex if we didn't yet 
             for (let i = 0; i < visited.length; i++) {
                 if (!visited[i]) traverse(i);
@@ -124,16 +137,18 @@ class Graph {
     }
 }
 
-// Test input Graph A
+// Inputs for testing.
+
+// Test input Graph A (disconnected)
 // |0| => null
 // |1| => [2] -> [0] -> null
 // |2| => null
 // |3| => null
 // |4| => [3] -> null
-let myGraph = new Graph(5);
-myGraph.addEdge(1,2);
-myGraph.addEdge(1,0);
-myGraph.addEdge(4,3);
+// let myGraph = new Graph(5);
+// myGraph.addEdge(1,2);
+// myGraph.addEdge(1,0);
+// myGraph.addEdge(4,3);
 
 // Test input Graph B
 // |0| => [2] -> [1] -> null
@@ -146,6 +161,30 @@ myGraph.addEdge(4,3);
 // myGraph.addEdge(1,3);
 // myGraph.addEdge(2,3);
 
+// Test input Graph C
+// |0| => [1] -> [2] -> [3] -> null
+// |1| => [4] -> [5] -> [6] -> null
+// |2| => [7] -> [8] -> [9] -> null
+// |3| => [10] -> [11] -> [12] -> null
+// |3| => [10] -> [11] -> [12] -> null
+// |4| => [13] -> [14] -> [15] -> null
+let myGraph = new Graph(16);
+myGraph.addEdge(0,1);
+myGraph.addEdge(0,2);
+myGraph.addEdge(0,3);
+myGraph.addEdge(1,4);
+myGraph.addEdge(1,5);
+myGraph.addEdge(1,6);
+myGraph.addEdge(2,7);
+myGraph.addEdge(2,8);
+myGraph.addEdge(2,9);
+myGraph.addEdge(3,10);
+myGraph.addEdge(3,11);
+myGraph.addEdge(3,12);
+myGraph.addEdge(4,13);
+myGraph.addEdge(4,14);
+myGraph.addEdge(4,15);
+
 myGraph.printSelf();
 console.log();
-myGraph.depthFirstTraversal(0);
+myGraph.breadthFirstTraversal(0);
