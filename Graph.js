@@ -56,7 +56,6 @@ class Graph {
         }
     }   
 
-    // TODO: disconnected graph traversing
     breadthFirstTraversal(source) {
         let q = new Queue;
         let g = this;
