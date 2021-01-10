@@ -8,6 +8,7 @@
 
 const LinkedList = require('./src/LinkedList.js');
 const Queue = require('./src/Queue.js');
+const Stack = require('./src/Stack.js');
 
 class Graph {
 
@@ -55,21 +56,27 @@ class Graph {
         }
     }   
 
-
     breadthFirstTraversal(source) {
         console.log("Visited: " + source +"; ");
 
         let q = new Queue;
+        
+        let visited = [];
+        for (let i = source; i < this.vertices; i++) {
+            visited.push(false);
+        }
 
         for (let i = source; i < this.vertices; i++) {
-            
             // we reverse the list of each vertex to traverse the graph from left to right
             let reversedList = this.list[i].createReversed();
             let t = reversedList.head;
             
-
             while (t !== null) {
-                q.enqueue(t.data);
+                // enque vertex if we didn't visit it yet
+                if (!visited[t.data]) {
+                    q.enqueue(t.data);
+                    visited[t.data] = true;
+                }
                 t = t.nextNode;
             }
         }
@@ -79,18 +86,66 @@ class Graph {
         }
     }
 
-    // TODO: Depth-first traversal
+    depthFirstTraversal(source) {
+        let s = new Stack;
+        let g = this;
+        let visited = [];
+        
+        for (let i = source; i < this.vertices; i++) visited.push(false);
+        visited[0] = true;
+        
+        traverse(source);
+        
+        function traverse(source) {
+            console.log("Visited: " + source);
+            visited[source] = true; 
+            
+            let list = g.list[source];
+            let t = list.head;
+            
+            // push all edges of current vertex to the stack
+            while (t != null) {
+                if (!visited[t.data]) s.push(t.data);
+                t = t.nextNode;
+            }
+            
+            // visit every vertex we have in the stack
+            while(s.getTop()) {
+                let currentNode = s.pop();                                
+                if (!visited[currentNode]) traverse(currentNode);
+            }
+            
+            // unconnected graph check
+            // visit vertex if we didn't yet 
+            for (let i = 0; i < visited.length; i++) {
+                if (!visited[i]) traverse(i);
+            }
+        }
+    }
 }
 
-let myGraph = new Graph(6);
+// Test input Graph A
+// |0| => null
+// |1| => [2] -> [0] -> null
+// |2| => null
+// |3| => null
+// |4| => [3] -> null
+let myGraph = new Graph(5);
+myGraph.addEdge(1,2);
+myGraph.addEdge(1,0);
+myGraph.addEdge(4,3);
 
-myGraph.addEdge(0,1);
-myGraph.addEdge(0,2);
-myGraph.addEdge(2,3);
-myGraph.addEdge(2,4);
-myGraph.addEdge(2,5);
-myGraph.addEdge(5,0);
+// Test input Graph B
+// |0| => [2] -> [1] -> null
+// |1| => [3] -> null
+// |2| => [3] -> null
+// |3| => null
+// let myGraph = new Graph(4);
+// myGraph.addEdge(0,2);
+// myGraph.addEdge(0,1);
+// myGraph.addEdge(1,3);
+// myGraph.addEdge(2,3);
 
 myGraph.printSelf();
 console.log();
-myGraph.breadthFirstTraversal(0);
+myGraph.depthFirstTraversal(0);
