@@ -21,7 +21,6 @@ Depth first traversal.
 1. detectCycle();
 Returns TRUE if there is a cycle in the graph.
 
-
 ### Example of how to create a graph:
 
 ```javascript

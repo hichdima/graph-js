@@ -182,52 +182,21 @@ class Graph {
             }
         }
     }
-        
+    
     // Returns ture if there is a cycle in the graph
+    // TODO:
     detectCycle() {
-        console.log("We begin");
-
-        var g = this;        
-        var visited = [];
+        var whiteSet = array(); // All nodes
+        var greySet  = array(); // Current neighbourhood
+        var blackSet = array(); // Visited nodes
         
-        for (let i = 0; i < g.vertices; i++) {
-            visited[i] = false;
-        }
-
-        for (let i = 0; i < visited.length; i++) {
-            if (traverse(i)) {
-                console.log("Part of the cycle 2: " + i);
-                return true;
-            }
-        }
-
-        function traverse(i) {
-            var s = new Stack;
-
-            console.log("Visited " + i);
-            visited[i] = true;
-            s.push(i);
-
-            while (s.isEmpty() == false) {
-                let current_node = s.pop();
-
-                var temp = g.list[current_node].head;
-
-                while(temp != null) {
-                    if (visited[temp.data]) {
-                        console.log("Part of the cycle 1: " + current_node);
-                        return true;
-                    }
-                    s.push(temp.data);
-                    temp = temp.nextElement;
-                }
-            }
-
-            return false;
-        }
-
-        console.log("No cycles detected.");
-        return false; 
+        // 0. Use DFS
+        // 1 - Move random node from white to grey
+        // 2 - While in grey traverse via DFS
+        // 2.1 - If no more kids for a node move it from grey to black
+        // 2.2 - If no more nodes in grey move to step 1
+        // 2.3 - If current node of iteration is in grey set - WE'VE GOT A CYCLE
+        // 3 - If all the nodes are in black set - NO CYCLES 
     }
 }
 
@@ -239,10 +208,11 @@ class Graph {
 // |2| => null
 // |3| => null
 // |4| => [3] -> null
-let myGraph = new Graph(3);
+let myGraph = new Graph(4);
+myGraph.addEdge(3,0);
+myGraph.addEdge(3,1);
 myGraph.addEdge(0,1);
 myGraph.addEdge(1,2);
-myGraph.addEdge(2,0);
 
 myGraph.printSelf();
 myGraph.detectCycle();
