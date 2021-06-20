@@ -94,6 +94,58 @@ class Graph {
         }
     }
     
+    // TODO: fix incorrect order of vivited vertexes
+    breadthFirstTraversalAlt(source) {
+        let q = new Queue;
+        let g = this;
+        let visited = [];
+        
+        // keep track of every visited vertex with this array
+        for (let i = source; i < this.vertices; i++) visited.push(false);
+
+        // enque edges of each vertex into the queue
+        for (let i = source; i < this.vertices; i++) {
+            let list = g.list[i].createReversed();
+            let t = list.head;
+            
+            while (t !== null) {
+                if (!visited[t.data]) {
+                    q.enqueue(t.data);
+                }
+                t = t.nextNode;
+            }            
+        }
+        
+        // visit every vertex we have in the queue
+        visitVertexes(q);
+        
+        function visitVertexes(q) {
+            console.log(q);
+            while (!q.isEmpty()) {
+                let currentNode = q.dequeue();
+                if (!visited[currentNode]) {
+                    console.log("Visited: " + currentNode);
+                    visited[currentNode] = true; 
+                }
+            }  
+        }
+
+        let disconnected = false;
+        // disconnected graph check
+        // visit vertex if we didn't yet 
+        for (let i = 0; i < visited.length; i++) {
+            if (!visited[i]) {
+                console.log(i);
+                q.enqueue(i);
+                disconnected = true;
+            }
+        }
+        
+        if (disconnected) {
+            visitVertexes(q);
+        }
+    }
+      
     depthFirstTraversal(source) {
         let s = new Stack;
         let g = this;
@@ -130,6 +182,53 @@ class Graph {
             }
         }
     }
+        
+    // Returns ture if there is a cycle in the graph
+    detectCycle() {
+        console.log("We begin");
+
+        var g = this;        
+        var visited = [];
+        
+        for (let i = 0; i < g.vertices; i++) {
+            visited[i] = false;
+        }
+
+        for (let i = 0; i < visited.length; i++) {
+            if (traverse(i)) {
+                console.log("Part of the cycle 2: " + i);
+                return true;
+            }
+        }
+
+        function traverse(i) {
+            var s = new Stack;
+
+            console.log("Visited " + i);
+            visited[i] = true;
+            s.push(i);
+
+            while (s.isEmpty() == false) {
+                let current_node = s.pop();
+
+                var temp = g.list[current_node].head;
+
+                while(temp != null) {
+                    if (visited[temp.data]) {
+                        console.log("Part of the cycle 1: " + current_node);
+                        return true;
+                    }
+                    s.push(temp.data);
+                    temp = temp.nextElement;
+                }
+            }
+
+            return false;
+        }
+
+        console.log("No cycles detected.");
+        return false; 
+    }
 }
 
 // Inputs for testing.
@@ -140,46 +239,10 @@ class Graph {
 // |2| => null
 // |3| => null
 // |4| => [3] -> null
-// let myGraph = new Graph(5);
-// myGraph.addEdge(1,2);
-// myGraph.addEdge(1,0);
-// myGraph.addEdge(4,3);
-
-// Test input Graph B
-// |0| => [2] -> [1] -> null
-// |1| => [3] -> null
-// |2| => [3] -> null
-// |3| => null
-// let myGraph = new Graph(4);
-// myGraph.addEdge(0,2);
-// myGraph.addEdge(0,1);
-// myGraph.addEdge(1,3);
-// myGraph.addEdge(2,3);
-
-// Test input Graph C
-// |0| => [1] -> [2] -> [3] -> null
-// |1| => [4] -> [5] -> [6] -> null
-// |2| => [7] -> [8] -> [9] -> null
-// |3| => [10] -> [11] -> [12] -> null
-// |3| => [10] -> [11] -> [12] -> null
-// |4| => [13] -> [14] -> [15] -> null
-let myGraph = new Graph(16);
+let myGraph = new Graph(3);
 myGraph.addEdge(0,1);
-myGraph.addEdge(0,2);
-myGraph.addEdge(0,3);
-myGraph.addEdge(1,4);
-myGraph.addEdge(1,5);
-myGraph.addEdge(1,6);
-myGraph.addEdge(2,7);
-myGraph.addEdge(2,8);
-myGraph.addEdge(2,9);
-myGraph.addEdge(3,10);
-myGraph.addEdge(3,11);
-myGraph.addEdge(3,12);
-myGraph.addEdge(4,13);
-myGraph.addEdge(4,14);
-myGraph.addEdge(4,15);
+myGraph.addEdge(1,2);
+myGraph.addEdge(2,0);
 
 myGraph.printSelf();
-console.log();
-myGraph.breadthFirstTraversal(0);
+myGraph.detectCycle();

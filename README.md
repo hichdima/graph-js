@@ -4,13 +4,22 @@
 Methods included:
 
 1. addEdge(source, destination);
-inserts a destination vertex into the list of source vertex
+Inserts a destination vertex into the list of source vertex.
 
 1. printSelf();
 Prints every vertex and its edges.
 
 1. breadthFirstTraversal(source);
-Breadth first traversal
+Breadth first traversal.
+
+1. breadthFirstTraversalAlt(source);
+Alternative breadth first traversal.
+
+1. depthFirstTraversal(source);
+Depth first traversal.
+
+1. detectCycle();
+Returns TRUE if there is a cycle in the graph.
 
 
 ### Example of how to create a graph:
